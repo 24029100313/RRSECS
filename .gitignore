@@ -1,0 +1,70 @@
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# Native extension and compiler outputs
+*.so
+*.dll
+*.dylib
+*.o
+*.obj
+*.a
+*.lib
+*.ninja_deps
+*.ninja_log
+
+# Virtual environments and local environment files
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+
+# Editor and OS noise
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs and runtime outputs
+*.log
+logs/
+runs/
+wandb/
+tensorboard/
+/outputs/
+/experiments/
+
+# Data, checkpoints, and model weights
+/data/
+/datasets/
+/checkpoints/
+/pretrained/
+/weights/
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.onnx
+
+# Archives and generated reports
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Notebooks
+.ipynb_checkpoints/

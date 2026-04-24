@@ -1,0 +1,39 @@
+# arguments for dataset
+dataset: ImageNet1k # MillionAID, EuroSAT, ImageNet1k
+crop_size: 224
+strong_aug: True
+mixup_cutmix_aug: True
+
+# arguments for model
+model:
+  backbone:
+    type: mit_b0 # refer model/model_info.py to select you interesting model
+    pretrained:  # ImageNet, None: random init
+    kwargs:
+      in_channels: 3
+
+find_unused_parameters: False # False, True
+
+# arguments for training
+epochs: 300
+batch_size: 128 # per GPU x 4 GPUs, bs=128
+
+warmup_epochs: 20
+warmup_lr: 0.000001 # Total batch_size 1024 <==> 1e-6, use linear scale to adjust
+min_lr: 0.00001 # Total batch_size 1024 <==> 1e-5, use linear scale to adjust
+
+optimizer:
+  type: AdamW # SGD, AdamW
+  kwargs:
+    lr: 0.001 # Total batch_size 1024 <==> 0.001, use linear scale to adjust
+    weight_decay: 0.05
+
+lr_scheduler:
+  type: cosine # poly, step, cosine
+  kwargs:
+    update_type: iter # iter, epoch
+
+criterion:
+  type: LabelSmoothingCrossEntropy # LabelSmoothingCrossEntropy, CELoss
+  kwargs:
+    smoothing: 0.1

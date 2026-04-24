@@ -1,0 +1,39 @@
+# arguments for dataset
+dataset: Hi-CNA # LEVIR-CD+, Hi-CNA, OSCD, S1GFloods
+crop_size: 512
+
+# arguments for model
+model:
+  backbone:
+#    siamese: True # default: True
+    type: swin_tiny # refer model/model_info.py to select you interesting model
+    pretrained: imagenet # None: random init
+    kwargs:
+      in_channels: 3
+#  neck:
+#    type: multilevel_neck
+  decoder:
+    type: UPerHead
+
+find_unused_parameters: False # False, True
+
+# arguments for training
+epochs: 50
+batch_size: 4 # per GPU x 4 GPUs, bs=16
+
+optimizer:
+  type: AdamW # SGD, AdamW
+  kwargs:
+    lr: 0.00006
+    weight_decay: 0.01
+    lr_multi: 10.0
+
+lr_scheduler:
+  type: poly # poly, step, cosine
+  kwargs:
+    update_type: iter # iter, epoch
+
+criterion:
+  type: CELoss
+  kwargs:
+    ignore_index: 255

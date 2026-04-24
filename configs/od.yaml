@@ -1,0 +1,55 @@
+# arguments for dataset
+dataset: NWPU_VHR-10 # DIOR, SARDet-100K, SSDD, NWPU_VHR-10
+data_aug:
+#  scales: [480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800]
+#  max_size: 1333
+  scales: [480, 512, 544, 576, 608, 640]
+  max_size: 640
+  scales2_resize: [400, 500, 600]
+  scales2_crop: [384, 600] # basic aug, including flip, resize or resize-crop-resize
+  fix_size: True # if True, return fixed image size with aspect ratio according to (max(scales), max_size)
+  strong_aug: False # if True, add additional crop aug and color aug
+
+# arguments for model
+model:
+  backbone:
+    type: swin_tiny # refer model/model_info.py to select you interesting model
+    pretrained: imagenet # None: random init
+    kwargs:
+      in_channels: 3
+  decoder:
+    type: DINOHead # DETRHead, DeformableDETRHead, DINOHead
+    pretrained: pretrained_weights/coco/dino_5scale_o365tococo_fromfocalnetdino_rsfm.pth
+    kwargs:
+      num_feature_levels: 5
+
+find_unused_parameters: False # False, True
+
+# arguments for training
+epochs: 12
+batch_size: 2 # per GPU x 4 GPUs, bs=16
+
+optimizer:
+  type: AdamW # SGD, AdamW
+  kwargs:
+    lr: 0.00001
+    weight_decay: 0.0001
+    lr_multi: 10.0
+
+lr_scheduler:
+  type: step # poly, step, cosine, multistep
+  kwargs:
+    update_type: epoch # iter, epoch
+    milestones: 11
+
+criterion:
+  type: DINOLoss # DETRLoss, DeformableDETRLoss, DINOLoss
+  kwargs:
+    weight_cls: 2.0
+    weight_bbox: 5.0
+    weight_giou: 2.0
+    aux_loss: True
+
+# arguments for postprocessor
+num_select: 100 # num predicted boxes
+nms_iou_threshold: -1 # <0: not use normal nms for detr-based detector

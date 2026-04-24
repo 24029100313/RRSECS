@@ -1,0 +1,1 @@
+from .qrnet_fusion import QRNet_fusion

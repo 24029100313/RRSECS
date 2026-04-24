@@ -1,0 +1,41 @@
+# arguments for dataset
+dataset: PASCAL_VOC # Potsdam, Potsdam_woclutter, DeepGlobe, LoveDA, WHU_OPT_SAR, DFC24_T1, Agriculture_Vision, SPARCS, SegMunich
+crop_size: 518
+semi_supervised:
+  labeled_partition: 92
+  unlabeled_partition: False
+
+# arguments for model
+model:
+  backbone:
+    type: dinov2_small # refer model/model_info.py to select you interesting model
+    pretrained: imagenet # None: random init
+    kwargs:
+      in_channels: 3
+  neck:
+    type: p2h
+  decoder:
+    type: DPTHead
+
+find_unused_parameters: True # False, True
+
+# arguments for training
+epochs: 50
+batch_size: 8 # per GPU x 4 GPUs, bs=16
+
+optimizer:
+  type: AdamW # SGD, AdamW
+  kwargs:
+    lr: 0.000005
+    weight_decay: 0.01
+    lr_multi: 40.0
+
+lr_scheduler:
+  type: poly # poly, step, cosine
+  kwargs:
+    update_type: iter # iter, epoch
+
+criterion:
+  type: CELoss  # CELoss, Mask2FormerLoss
+  kwargs:
+    ignore_index: 255

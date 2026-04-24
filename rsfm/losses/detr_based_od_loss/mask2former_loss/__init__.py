@@ -1,0 +1,1 @@
+from .mask2former_loss import Mask2FormerLoss

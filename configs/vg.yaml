@@ -1,0 +1,53 @@
+# arguments for dataset
+dataset: DIOR-RSVG # DIOR-RSVG, OPT-RSVG, RefDIOR_VG, RefCOCO_VG, RefCOCO+_VG, G-Ref-g_VG, G-Ref-u_VG
+crop_size: 512
+strong_aug: True
+
+# arguments for model
+model:
+#  load_from: exps/vg/RefCOCO_VG/swin_tiny_lqvg_q1noclsloss_4xb4_img640_ep50_sa_encprecoco/RefCOCO_VG.swin_tiny.None.LQVGHead.4xb4.img640.ep50.precoco.best77.06.pth
+  backbone:
+    type: vmamba_tiny # refer model/model_info.py to select you interesting model
+    pretrained: imagenet # imagenet, None: random init
+    kwargs:
+      in_channels: 3
+      vlf_vg: LPVA # QRNet, LPVA
+#  neck:
+#    type: QMF # QMF
+  text_encoder:
+    type: bert-base-uncased # bert-base-uncased, roberta-base
+  decoder:
+    type: LPVAHead # TransVGHead, VLTVGHead, LQVGHead, TransCPHead, PseudoQHead, QRNetHead, DynamicMDETRHead, LPVAHead
+#    pretrained: pretrained_weights/vg/unc_trans_enc.pth
+    kwargs:
+      trans_enc: False
+#      num_queries: 10
+
+find_unused_parameters: True # False, True
+
+# arguments for training
+epochs: 50
+batch_size: 8 # per GPU x 4 GPUs, bs=16
+
+optimizer:
+  type: AdamW # SGD, AdamW
+  kwargs:
+    lr: 0.00001
+    weight_decay: 0.0001
+    lr_multi: 10.0
+
+lr_scheduler:
+  type: multistep # poly, step, cosine, multistep
+  kwargs:
+    update_type: epoch # iter, epoch
+    milestones: [36, 45]
+
+criterion:
+  type: VGLoss # VGLoss, LQVGLoss, DeformableDETRLoss
+  kwargs:
+    aux_loss: True
+    weight_bbox: 5.0
+    weight_giou: 2.0
+#    weight_cls: 2.0
+#    num_classes: 1
+#    use_for_vg: True
